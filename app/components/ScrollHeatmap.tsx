@@ -21,7 +21,7 @@ export default function ScrollHeatmap({ scrollDepths }: Props) {
         ctx.clearRect(0, 0, W, H)
 
         const totalSessions = scrollDepths.length
-        const depths = [25, 50, 75, 100]
+        const depths = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
         const counts = depths.map(d => scrollDepths.filter(s => s >= d).length)
 
         depths.forEach((depth, i) => {
@@ -29,19 +29,15 @@ export default function ScrollHeatmap({ scrollDepths }: Props) {
             const prevY = i === 0 ? 0 : (depths[i - 1] / 100) * H
             const percent = Math.round((counts[i] / totalSessions) * 100)
 
-            // Terra Style Gradient: High reach (Greenish) -> Low reach (Warm Orange/Red)
-            // Using a more organic palette: #4a7c59 (Terra Emerald) to #d4dccf (Sage) to a warm #e6b8a2
-
-            let fillColor = 'rgba(74, 124, 89, 0.6)' // Default Terra Green for high %
-            if (percent < 75) fillColor = 'rgba(136, 176, 145, 0.5)' // Soft Sage
-            if (percent < 50) fillColor = 'rgba(212, 220, 207, 0.4)' // Light Accent
-            if (percent < 25) fillColor = 'rgba(230, 184, 162, 0.4)' // Warm Sand/Sunset
+            let fillColor = 'rgba(74, 124, 89, 0.6)'
+            if (percent < 75) fillColor = 'rgba(136, 176, 145, 0.5)'
+            if (percent < 50) fillColor = 'rgba(212, 220, 207, 0.4)'
+            if (percent < 25) fillColor = 'rgba(230, 184, 162, 0.4)'
 
             ctx.fillStyle = fillColor
             ctx.fillRect(0, prevY, W, y - prevY)
 
-            // Custom modern labels
-            ctx.fillStyle = '#5c5c56' // Soft Stone
+            ctx.fillStyle = '#5c5c56'
             ctx.font = 'bold 12px "Nunito Sans", sans-serif'
             ctx.fillText(`%${depth} Derinlik`, 16, y - 24)
 
@@ -49,7 +45,6 @@ export default function ScrollHeatmap({ scrollDepths }: Props) {
             ctx.fillStyle = 'rgba(92, 92, 86, 0.6)'
             ctx.fillText(`${counts[i]} oturum (${percent}%)`, 16, y - 8)
 
-            // Organic separation line
             ctx.strokeStyle = 'rgba(74, 124, 89, 0.1)'
             ctx.lineWidth = 1
             ctx.setLineDash([5, 5])
